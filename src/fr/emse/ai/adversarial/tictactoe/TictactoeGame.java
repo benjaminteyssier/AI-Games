@@ -60,17 +60,22 @@ public class TictactoeGame implements Game<List<Integer>, Integer, Integer> {
 
     @Override
     public boolean isTerminal(List<Integer> state) {
-        List<Integer> Line1 = new ArrayList<>(Arrays.asList(1, 1, 1, 0, 0, 0, 0, 0, 0));
-        List<Integer> Line2 = new ArrayList<>(Arrays.asList(0, 0, 0, 1, 1, 1, 0, 0, 0));
-        List<Integer> Line3 = new ArrayList<>(Arrays.asList(0, 0, 0, 0, 0, 0, 1, 1, 1));
-        List<Integer> Column1 = new ArrayList<>(Arrays.asList(1, 0, 0, 1, 0, 0, 1, 0, 0));
-        List<Integer> Column2 = new ArrayList<>(Arrays.asList(0, 1, 0, 0, 1, 0, 0, 1, 0));
-        List<Integer> Column3 = new ArrayList<>(Arrays.asList(0, 0, 1, 0, 0, 1, 0, 0, 1));
-        List<Integer> Diagonal1 = new ArrayList<>(Arrays.asList(1, 0, 0, 0, 1, 0, 0, 0, 1));
-        List<Integer> Diagonal2 = new ArrayList<>(Arrays.asList(0, 0, 1, 0, 1, 0, 1, 0, 0));
 
-        List<List<Integer>> terminalStates = new ArrayList<>(Arrays.asList(Line1, Line2, Line3, Column1, Column2, Column3, Diagonal1, Diagonal2));
-        return terminalStates.contains(state.subList(1, state.size()));
+        for (int lineNumber = 1; lineNumber < 4; lineNumber++) {
+            if (state.get(3 * lineNumber - 2) == state.get(3 * lineNumber - 1) && state.get(3 * lineNumber - 2) == state.get(3 * lineNumber) && state.get(3*lineNumber)!=0)
+                return true;
+        }
+        for (int columnNumber = 1; columnNumber < 3; columnNumber++) {
+            if (state.get(columnNumber) == state.get(columnNumber + 3) && state.get(columnNumber) == state.get(columnNumber + 6) && state.get(columnNumber)!=0)
+                return true;
+        }
+        if (state.get(1) == state.get(5) && state.get(1) == state.get(9) && state.get(1)!=0)
+            return true;
+        if (state.get(3) == state.get(5) && state.get(3) == state.get(7) && state.get(3)!=0)
+            return true;
+        else
+            return false;
+
     }
 
     @Override
@@ -88,7 +93,7 @@ public class TictactoeGame implements Game<List<Integer>, Integer, Integer> {
     public double evaluateLine(int lineNumber, List<Integer> state) {
         double score = 0;
         for (int i = 0; i < 3; i++) {
-            List<Integer> line = state.subList(3 * lineNumber - 2, 3*lineNumber+1);
+            List<Integer> line = state.subList(3 * lineNumber - 2, 3 * lineNumber + 1);
             if (line.get(i) == 1)
                 score++;
             else if (line.get(i) == 2)
