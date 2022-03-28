@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TictactoeGame implements Game<List<Integer>, Integer, Integer> {
 
-    public final static Integer[] players = {0, 1};
+    public final static Integer[] players = {1, 2};
     public final static List<Integer> initialState = new ArrayList<>(); //[player turn, 1 row 1 column, 1 row 2 column ...]
 
     public TictactoeGame(int player) {
@@ -48,12 +48,12 @@ public class TictactoeGame implements Game<List<Integer>, Integer, Integer> {
     @Override
     public List<Integer> getResult(List<Integer> state, Integer action) {
         List<Integer> newState = new ArrayList<>(state);
-        if (newState.get(0) == 0) {
+        if (newState.get(0) == 1) {
             newState.set(action, 1);
-            newState.set(0, 1);
-        } else if (newState.get(0) == 1) {
+            newState.set(0, 2);
+        } else if (newState.get(0) == 2) {
             newState.set(action, 2);
-            newState.set(0, 0);
+            newState.set(0, 1);
         }
         return newState;
     }
@@ -61,84 +61,61 @@ public class TictactoeGame implements Game<List<Integer>, Integer, Integer> {
     @Override
     public boolean isTerminal(List<Integer> state) {
 
-        for (int lineNumber = 1; lineNumber < 4; lineNumber++) {
-            if (state.get(3 * lineNumber - 2) == state.get(3 * lineNumber - 1) && state.get(3 * lineNumber - 2) == state.get(3 * lineNumber) && state.get(3*lineNumber)!=0)
-                return true;
+        for (List<Integer> winCombination : threeInARow) {
+            if (state.get(winCombination.get(0)) == state.get(winCombination.get(1)) && state.get(winCombination.get(0)) == state.get(winCombination.get(2))) {
+                if (state.get(winCombination.get(0)) != 0)
+                    return true;
+            }
         }
-        for (int columnNumber = 1; columnNumber < 3; columnNumber++) {
-            if (state.get(columnNumber) == state.get(columnNumber + 3) && state.get(columnNumber) == state.get(columnNumber + 6) && state.get(columnNumber)!=0)
-                return true;
+        for(int i=1;i<10;i++){
+            if(state.get(i)==0)
+                return false;
         }
-        if (state.get(1) == state.get(5) && state.get(1) == state.get(9) && state.get(1)!=0)
-            return true;
-        if (state.get(3) == state.get(5) && state.get(3) == state.get(7) && state.get(3)!=0)
-            return true;
-        else
-            return false;
-
+        return true;
     }
 
-    @Override
     public double getUtility(List<Integer> state, Integer player) {
-        double score = 0;
-        for (int i = 1; i < 4; i++) {
-            score += evaluateLine(i, state);
-            score += evaluateColumn(i, state);
-        }
-        score += evaluateDiagonal(1, state);
-        score += evaluateDiagonal(2, state);
-        return score;
-    }
+        int playerScore = 0;
+        int opponentScore = 0;
+        int score = 0;
+        int cell = 0;
 
-    public double evaluateLine(int lineNumber, List<Integer> state) {
-        double score = 0;
-        for (int i = 0; i < 3; i++) {
-            List<Integer> line = state.subList(3 * lineNumber - 2, 3 * lineNumber + 1);
-            if (line.get(i) == 1)
-                score++;
-            else if (line.get(i) == 2)
-                score--;
+        for (List<Integer> combination : threeInARow) {
+            playerScore = 0;
+            opponentScore = 0;
+            for (int i = 0; i < 3; i++) {
+                cell = state.get(combination.get(i));
+                if (cell == player)
+                    playerScore++;
+                else if (cell == invert(player))
+                    opponentScore++;
+            }
+            score += coefficientMatrix.get(playerScore).get(opponentScore);
         }
         return score;
     }
 
-    public double evaluateColumn(int columnNumber, List<Integer> state) {
-        double score = 0;
-        for (int i = 0; i < 3; i++) {
-            if (state.get(columnNumber + 3 * i) == 1)
-                score++;
-            else if (state.get(columnNumber + 3 * i) == 2)
-                score--;
-        }
-        return score;
+    int invert(int x) {
+        if (x == 1) return 2;
+        else return 1;
     }
 
-    public double evaluateDiagonal(int diagonalNumber, List<Integer> state) {
-        double score = 0;
-        if (diagonalNumber == 1) {
-            if (state.get(1) == 1)
-                score++;
-            else if (state.get(1) == 2)
-                score--;
-            if (state.get(9) == 1)
-                score++;
-            else if (state.get(9) == 2)
-                score--;
-        } else if (diagonalNumber == 2) {
-            if (state.get(3) == 1)
-                score++;
-            else if (state.get(3) == 2)
-                score--;
-            if (state.get(7) == 1)
-                score++;
-            else if (state.get(7) == 2)
-                score--;
-        }
-        if (state.get(5) == 1)
-            score++;
-        else if (state.get(5) == 2)
-            score--;
 
-        return score;
-    }
+    List<List<Integer>> threeInARow = new ArrayList<>(Arrays.asList(
+            Arrays.asList(1, 2, 3),
+            Arrays.asList(4, 5, 6),
+            Arrays.asList(7, 8, 9),
+            Arrays.asList(1, 4, 7),
+            Arrays.asList(2, 5, 8),
+            Arrays.asList(3, 6, 9),
+            Arrays.asList(1, 5, 9),
+            Arrays.asList(3, 5, 7)
+    ));
+
+    List<List<Integer>> coefficientMatrix = new ArrayList<>(Arrays.asList(
+            Arrays.asList(0, -10, -100, -1000),
+            Arrays.asList(10, 0, 0, 0),
+            Arrays.asList(100, 0, 0, 0),
+            Arrays.asList(1000, 0, 0, 0)
+    ));
 }
