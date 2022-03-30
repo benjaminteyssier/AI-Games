@@ -2,7 +2,7 @@ package fr.emse.ai.util;
 
 import java.util.ArrayList;
 
-public class TestGameBis {
+public class MinimaxAndAlphabeta {
 	public static void main(String[] args) {
 		// niveau 4
 		ArrayList<SimpleTwoPlyGameTree<Integer>> sublist41 = new ArrayList<SimpleTwoPlyGameTree<Integer>>();
@@ -98,12 +98,16 @@ public class TestGameBis {
 
 		System.out.println("Minimax :");
 		Minimax minimax = new Minimax();
+		System.out.print("Result : ");
 		System.out.println(minimax.minimax(tree));
+		System.out.print("Node explored : ");
 		System.out.println(minimax.nodesExplored);
 
 		System.out.println("Alphabeta :");
 		Alphabeta alphaBeta = new Alphabeta();
+		System.out.print("Result : ");
 		System.out.println(alphaBeta.alphabeta(tree,Integer.MIN_VALUE,Integer.MAX_VALUE));
+		System.out.print("Node explored : ");
 		System.out.println(alphaBeta.nodesExplored);
 	}
 }

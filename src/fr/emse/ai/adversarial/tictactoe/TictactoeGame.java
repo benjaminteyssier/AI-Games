@@ -67,8 +67,8 @@ public class TictactoeGame implements Game<List<Integer>, Integer, Integer> {
                     return true;
             }
         }
-        for(int i=1;i<10;i++){
-            if(state.get(i)==0)
+        for (int i = 1; i < 10; i++) {
+            if (state.get(i) == 0)
                 return false;
         }
         return true;
@@ -99,7 +99,6 @@ public class TictactoeGame implements Game<List<Integer>, Integer, Integer> {
         if (x == 1) return 2;
         else return 1;
     }
-
 
     List<List<Integer>> threeInARow = new ArrayList<>(Arrays.asList(
             Arrays.asList(1, 2, 3),
