@@ -132,9 +132,11 @@ public class TictactoeGameplay implements ActionListener {
                     if (state.get(winCombination.get(0)) == 1) {
                         System.out.println("Human wins !");
                         textfield.setText("Human wins !");
+                        return;
                     } else {
                         System.out.println("Machine wins!");
                         textfield.setText("Machine wins !");
+                        return;
                     }
                 }
             }

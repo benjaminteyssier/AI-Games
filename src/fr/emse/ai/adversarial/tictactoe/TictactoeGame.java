@@ -55,6 +55,7 @@ public class TictactoeGame implements Game<List<Integer>, Integer, Integer> {
             newState.set(action, 2);
             newState.set(0, 1);
         }
+
         return newState;
     }
 
