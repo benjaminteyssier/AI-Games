@@ -47,6 +47,8 @@ public class TictactoeGameplay implements ActionListener {
     TictactoeGameplay() {
 
         initGui("Tic Tac Toe");
+        if (state.get(0) == 2)
+            machinePlays();
 
         t_panel.add(textfield);
         frame.add(t_panel, BorderLayout.NORTH);
@@ -89,37 +91,27 @@ public class TictactoeGameplay implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (game.isTerminal(state)) {
-            System.out.println("GAME OVER: ");
-            for (List<Integer> winCombination : threeInARow) {
-                if (state.get(winCombination.get(0)) == state.get(winCombination.get(1)) && state.get(winCombination.get(0)) == state.get(winCombination.get(2))) {
-                    if (state.get(winCombination.get(0)) == 1) {
-                        System.out.println("Human wins !");
-                        textfield.setText("Human wins !");
-                    } else {
-                        System.out.println("Machine wins!");
-                        textfield.setText("Machine wins !");
+        if (!game.isTerminal(state)) {
+            List<Integer> actions = game.getActions(state);
+            if (state.get(0) == 1) {
+                for (int i = 0; i < 9; i++) {
+                    if (e.getSource() == bton[i]) {
+                        action = i + 1;
+                        if (actions.contains(action)) {
+                            state = game.getResult(state, action);
+                            displayGrid(state);
+                            break;
+                        }
                     }
-                    return;
                 }
+                if (state.get(0) == 2 && !game.isTerminal(state))
+                    machinePlays();
             }
-            System.out.println("Draw !");
-            return;
-        }
-        if (state.get(0) == 1) {
-            for (int i = 0; i < 9; i++) {
-                if (e.getSource() == bton[i]) {
-                    action = i + 1;
-                    state = game.getResult(state, action);
-                    displayGrid(state);
-                    break;
-                }
+            else{
+                machinePlays();
             }
-            machinePlays();
         }
-        else{
-            machinePlays();
-        }
+        displayGrid(state);
     }
 
     public void displayGrid(List<Integer> state) {
@@ -132,6 +124,22 @@ public class TictactoeGameplay implements ActionListener {
                 bton[j - 1].setText("X");
                 textfield.setText("O turn");
             }
+        }
+        if (game.isTerminal(state)) {
+            System.out.println("GAME OVER: ");
+            for (List<Integer> winCombination : threeInARow) {
+                if (state.get(winCombination.get(0)) == state.get(winCombination.get(1)) && state.get(winCombination.get(0)) == state.get(winCombination.get(2))) {
+                    if (state.get(winCombination.get(0)) == 1) {
+                        System.out.println("Human wins !");
+                        textfield.setText("Human wins !");
+                    } else {
+                        System.out.println("Machine wins!");
+                        textfield.setText("Machine wins !");
+                    }
+                }
+            }
+            System.out.println("Draw !");
+            textfield.setText("Draw !");
         }
     }
 
